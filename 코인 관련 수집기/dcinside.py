@@ -6,6 +6,11 @@ from dbconnect2 import db_con, insert_dcinsde
 import uuid
 import re
 
+########################################################################################################################
+#
+# request 이용
+#
+########################################################################################################################
 model_kwargs = {
     'source_name' : 'DC inside',
     'biz_kind' : 'post'
@@ -28,6 +33,7 @@ http_header = {
     'Upgrade-Insecure-Requests': '1',
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36'
 }
+# http_header를 다 안적을 경우 페이지가 정보를 못가져오는 경우 발생
 page = 1
 params = {
     'id' : 'bitcoins_new1',
@@ -45,15 +51,18 @@ with requests.Session() as session:
                 model_kwargs['data_id'] =  str(uuid.uuid4()).replace('-', '')
                 try:
                     model_kwargs['title'] = item.find(class_="gall_tit ub-word").text.replace('\n','')
+                    # 게시글 제목
                     url = 'https://gall.dcinside.com' + item.find(class_="gall_tit ub-word").find('a').attrs['href']
+                    # 게시글 url
                     model_kwargs['url'] = url[:url.find('&page')]
                     model_kwargs['view_count'] = item.find(class_="gall_count").text
+                    # 조회수
                     model_kwargs['post_date'] = item.find(class_="gall_date").attrs['title']
+                    # 게시일
                     model_kwargs['like_count'] = item.find(class_="gall_recommend").text
-                    model_kwargs['content'] = None
-                    model_kwargs['comment_count'] = None
-                    model_kwargs['dislike_count'] = None
+                    # 좋아요 숫자
                     print(model_kwargs)
+                    insert_dcinsde(conn, model_kwargs=model_kwargs)
                 except:
                     None
         page += 1
