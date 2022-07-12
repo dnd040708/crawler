@@ -16,7 +16,7 @@ import re
 ########################################################################################################################
 
 
-
+'''
 http_header = [
     'User-Agent',
     '123'
@@ -24,8 +24,8 @@ http_header = [
 str1 = '{0[0]},{0[1]'
 str1 += '}'
 print(str1.format(http_header))
-
 '''
+
 tag_remove = re.compile('<.+?>')
 def ignore_tag(tag):
     return tag_remove.sub('', str(tag)).strip()
@@ -46,7 +46,3 @@ with requests.Session() as session:
         model_kwargs['death'] = item.find(class_='k-d-a').text.split('/')[1].strip()
         model_kwargs['assist'] = item.find(class_='k-d-a').text.split('/')[2].strip()
         model_kwargs['mmr'] = item.find(class_='mmr').text
-        for partic
-        main_data = item.find(class_='stats')
-        print(model_kwargs)
-        break'''
